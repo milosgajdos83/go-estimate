@@ -13,8 +13,8 @@ type Filter interface {
 	Update(x, u, ym mat.Vector) (Estimate, error)
 }
 
-// Propagator propagates internal state of the system to the next step
-type Propagator interface {
+// DiscretePropagator propagates internal state of a discrete-time system to the next step
+type DiscretePropagator interface {
 	// Propagate propagates internal state of the system to the next step.
 	// x is starting state, u is input vector, and z is disturbance input
 	Propagate(x, u, z mat.Vector) (mat.Vector, error)
@@ -27,15 +27,16 @@ type Observer interface {
 	Observe(x, u, wn mat.Vector) (y mat.Vector, err error)
 }
 
-// Model is a model of a dynamical system
-type Model interface {
+// DiscreteModel is a discrete-time model of a dynamical system which contains all the
+// logic to propagate internal state and observe external state.
+type DiscreteModel interface {
 	// Propagator is system propagator
-	Propagator
+	DiscretePropagator
 	// Observer is system observer
 	Observer
 	// SystemDims returns the dimension of state vector, input vector,
 	// output (measurements, written as y) vector and disturbance vector (only dynamical systems).
-	// Below are dimension of matrices as returned by SystemDims() (row,column)
+	// Below are dimension of matrices as returned by SystemDims() (row,column) (if DModel uses matrix representation)
 	//  nx, nx = A.SystemDims()
 	//  nx, nu = B.SystemDims()
 	//  ny, nx = C.SystemDims()
@@ -50,11 +51,11 @@ type Smoother interface {
 	Smooth([]Estimate, []mat.Vector) ([]Estimate, error)
 }
 
-// DiscreteModel is a dynamical system whose state is driven by
+// DiscreteControlSystem is a dynamical system whose state is driven by
 // static propagation and observation dynamics matrices
-type DiscreteModel interface {
-	// Model is a model of a dynamical system
-	Model
+type DiscreteControlSystem interface {
+	// DModel is a model of a dynamical system
+	DiscreteModel
 	// SystemMatrix returns state propagation matrix
 	SystemMatrix() (A mat.Matrix)
 	// ControlMatrix returns state propagation control matrix

@@ -62,15 +62,15 @@ func TestInitCond(t *testing.T) {
 func TestBase(t *testing.T) {
 	assert := assert.New(t)
 
-	f, err := NewBaseModel(A, B, C, D, E)
+	f, err := NewDiscrete(A, B, C, D, E)
 	assert.NotNil(f)
 	assert.NoError(err)
 }
 
-func TestBasePropagate(t *testing.T) {
+func TestDiscretePropagate(t *testing.T) {
 	assert := assert.New(t)
 
-	f, err := NewBaseModel(A, B, C, D, E)
+	f, err := NewDiscrete(A, B, C, D, E)
 	assert.NotNil(f)
 	assert.NoError(err)
 
@@ -93,10 +93,10 @@ func TestBasePropagate(t *testing.T) {
 	assert.NoError(err)
 }
 
-func TestBaseObserve(t *testing.T) {
+func TestDiscreteObserve(t *testing.T) {
 	assert := assert.New(t)
 
-	f, err := NewBaseModel(A, B, C, D, E)
+	f, err := NewDiscrete(A, B, C, D, E)
 	assert.NotNil(f)
 	assert.NoError(err)
 
@@ -119,12 +119,10 @@ func TestBaseObserve(t *testing.T) {
 	assert.NoError(err)
 }
 
-func TestBaseSystemMatrices(t *testing.T) {
+func TestSystemMatrices(t *testing.T) {
 	assert := assert.New(t)
-
-	f, err := NewBaseModel(A, B, C, D, E)
+	f := System{A, B, C, D, E}
 	assert.NotNil(f)
-	assert.NoError(err)
 
 	m := f.SystemMatrix()
 	assert.True(mat.EqualApprox(m, A, 0.001))
@@ -139,12 +137,10 @@ func TestBaseSystemMatrices(t *testing.T) {
 	assert.True(mat.EqualApprox(m, D, 0.001))
 }
 
-func TestBaseDims(t *testing.T) {
+func TestSystemDims(t *testing.T) {
 	assert := assert.New(t)
-
-	f, err := NewBaseModel(A, B, C, D, E)
+	f := System{A, B, C, D, E}
 	assert.NotNil(f)
-	assert.NoError(err)
 
 	nx, nu, ny, nz := f.SystemDims()
 	r, c := A.Dims()

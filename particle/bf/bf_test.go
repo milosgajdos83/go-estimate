@@ -13,7 +13,7 @@ import (
 )
 
 type invalidModel struct {
-	filter.Model
+	filter.DiscreteModel
 }
 
 func (m *invalidModel) SystemDims() (nx, nu, ny, nz int) {
@@ -21,7 +21,7 @@ func (m *invalidModel) SystemDims() (nx, nu, ny, nz int) {
 }
 
 var (
-	okModel  *sim.BaseModel
+	okModel  *sim.Discrete
 	badModel *invalidModel
 	ic       *sim.InitCond
 	p        int
@@ -55,7 +55,7 @@ func setup() {
 	C := mat.NewDense(1, 2, []float64{1.0, 0.0})
 	D := mat.NewDense(1, 1, []float64{0.0})
 
-	okModel = &sim.BaseModel{A: A, B: B, C: C, D: D}
+	okModel = &sim.Discrete{System: sim.System{A: A, B: B, C: C, D: D}}
 	badModel = &invalidModel{okModel}
 }
 
